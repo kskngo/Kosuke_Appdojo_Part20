@@ -8,7 +8,7 @@
 import UIKit
 
 class TableViewController: UITableViewController {
-    private let fruitsItems = [
+    private var fruitsItems = [
         FruitsItem(name: "りんご", isChecked: false),
         FruitsItem(name: "みかん", isChecked: true),
         FruitsItem(name: "バナナ", isChecked: false),
@@ -29,6 +29,17 @@ class TableViewController: UITableViewController {
         cell.nameLabel.text = fruitsItem.name
 
         return cell
+    }
+
+    @IBAction private func exitCancel(segue: UIStoryboardSegue) {
+    }
+
+    @IBAction private func exitSave(segue: UIStoryboardSegue) {
+        guard let addItemViewController = segue.source as? AddItemViewController else { return }
+        guard let newItemName = addItemViewController.nameTextField.text, !newItemName.isEmpty else { return }
+        let newItem =  FruitsItem(name: newItemName, isChecked: false)
+        fruitsItems.append(newItem)
+        self.tableView.reloadData()
     }
 }
 
