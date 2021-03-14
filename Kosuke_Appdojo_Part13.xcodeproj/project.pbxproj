@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2145B48525FADD47003D60AB /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2145B48425FADD47003D60AB /* TableViewController.swift */; };
+		219B6BC425FDD0CF00FACD73 /* ItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219B6BC325FDD0CF00FACD73 /* ItemCell.swift */; };
 		21B86C9A25F8E69B006D152C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B86C9925F8E69B006D152C /* AppDelegate.swift */; };
 		21B86C9C25F8E69B006D152C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B86C9B25F8E69B006D152C /* SceneDelegate.swift */; };
 		21B86CA125F8E69B006D152C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 21B86C9F25F8E69B006D152C /* Main.storyboard */; };
@@ -17,6 +18,7 @@
 
 /* Begin PBXFileReference section */
 		2145B48425FADD47003D60AB /* TableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
+		219B6BC325FDD0CF00FACD73 /* ItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemCell.swift; sourceTree = "<group>"; };
 		21B86C9625F8E69B006D152C /* Kosuke_Appdojo_Part13.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kosuke_Appdojo_Part13.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		21B86C9925F8E69B006D152C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		21B86C9B25F8E69B006D152C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -59,6 +61,7 @@
 				21B86C9925F8E69B006D152C /* AppDelegate.swift */,
 				21B86C9B25F8E69B006D152C /* SceneDelegate.swift */,
 				2145B48425FADD47003D60AB /* TableViewController.swift */,
+				219B6BC325FDD0CF00FACD73 /* ItemCell.swift */,
 				21B86C9F25F8E69B006D152C /* Main.storyboard */,
 				21B86CA225F8E69E006D152C /* Assets.xcassets */,
 				21B86CA425F8E69E006D152C /* LaunchScreen.storyboard */,
@@ -158,6 +161,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				219B6BC425FDD0CF00FACD73 /* ItemCell.swift in Sources */,
 				21B86C9A25F8E69B006D152C /* AppDelegate.swift in Sources */,
 				21B86C9C25F8E69B006D152C /* SceneDelegate.swift in Sources */,
 				2145B48525FADD47003D60AB /* TableViewController.swift in Sources */,
