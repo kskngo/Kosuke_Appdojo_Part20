@@ -8,6 +8,6 @@
 import UIKit
 
 class ItemCell: UITableViewCell {
-    @IBOutlet var checkMarkImageView: UIImageView!
-    @IBOutlet var nameLabel: UILabel!
+    @IBOutlet private(set) var checkMarkImageView: UIImageView!
+    @IBOutlet private(set) var nameLabel: UILabel!
 }
