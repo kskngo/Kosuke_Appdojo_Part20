@@ -16,18 +16,14 @@ class TableViewController: UITableViewController {
     ]
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return fruitsItems.count
+        fruitsItems.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell1", for: indexPath) as? ItemCell else {
             return UITableViewCell()
         }
-
-        let fruitsItem = fruitsItems[indexPath.row]
-        cell.checkMarkImageView.image = fruitsItem.isChecked ? UIImage(named: "check") : nil
-        cell.nameLabel.text = fruitsItem.name
-
+        cell.configure(fruitsItem: fruitsItems[indexPath.row])
         return cell
     }
 
@@ -36,8 +32,7 @@ class TableViewController: UITableViewController {
 
     @IBAction private func exitSave(segue: UIStoryboardSegue) {
         guard let addItemViewController = segue.source as? AddItemViewController else { return }
-        guard let newItemName = addItemViewController.nameTextField.text, !newItemName.isEmpty else { return }
-        let newItem =  FruitsItem(name: newItemName, isChecked: false)
+        guard let newItem = addItemViewController.newFruitsItem else { return }
         fruitsItems.append(newItem)
         self.tableView.reloadData()
     }

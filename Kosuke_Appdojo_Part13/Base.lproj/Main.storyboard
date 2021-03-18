@@ -93,12 +93,13 @@
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="save" id="uSp-Yt-ih6">
                             <connections>
-                                <segue destination="oa3-9M-Zmw" kind="unwind" unwindAction="exitSaveWithSegue:" id="FIm-Ic-Vuz"/>
+                                <action selector="didTapSaveButton:" destination="HHh-fj-I48" id="cP2-Ha-XMT"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="nameTextField" destination="w4F-oj-UXK" id="jZn-Yp-mE7"/>
+                        <segue destination="oa3-9M-Zmw" kind="unwind" identifier="SaveSegue" unwindAction="exitSaveWithSegue:" id="Xyg-ox-Lbr"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Oy2-tJ-FPc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
