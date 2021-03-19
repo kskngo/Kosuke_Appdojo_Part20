@@ -27,6 +27,11 @@ class TableViewController: UITableViewController {
         return cell
     }
 
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        fruitsItems[indexPath.row].isChecked.toggle()
+        tableView.reloadData()
+    }
+
     @IBAction private func exitCancel(segue: UIStoryboardSegue) {
     }
 
@@ -34,11 +39,11 @@ class TableViewController: UITableViewController {
         guard let addItemViewController = segue.source as? AddItemViewController else { return }
         guard let newItem = addItemViewController.newFruitsItem else { return }
         fruitsItems.append(newItem)
-        self.tableView.reloadData()
+        tableView.reloadData()
     }
 }
 
 struct FruitsItem {
     let name: String
-    let isChecked: Bool
+    var isChecked: Bool
 }
