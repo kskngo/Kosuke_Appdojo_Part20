@@ -29,7 +29,7 @@ class TableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         fruitsItems[indexPath.row].isChecked.toggle()
-        tableView.reloadData()
+        tableView.reloadRows(at: [indexPath], with: .automatic)
     }
 
     @IBAction private func exitCancel(segue: UIStoryboardSegue) {
