@@ -35,15 +35,51 @@ class TableViewController: UITableViewController {
     @IBAction private func exitCancel(segue: UIStoryboardSegue) {
     }
 
-    @IBAction private func exitSave(segue: UIStoryboardSegue) {
+    @IBAction private func exitAdd(segue: UIStoryboardSegue) {
         guard let addItemViewController = segue.source as? AddItemViewController else { return }
         guard let newItem = addItemViewController.newFruitsItem else { return }
         fruitsItems.append(newItem)
         tableView.reloadData()
     }
+
+    @IBAction private func exitEdit(segue: UIStoryboardSegue) {
+        guard let addItemViewController = segue.source as? AddItemViewController else { return }
+        guard let editItem = addItemViewController.editFruitsItem else { return }
+        fruitsItems[editItem.index].name = editItem.name
+        tableView.reloadRows(at: [IndexPath(row: editItem.index, section: 0)], with: .automatic)
+    }
+
+    override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+        let editFruitsItem = EditFruitsItem(
+            name: fruitsItems[indexPath.row].name,
+            index: indexPath.row)
+        performSegue(withIdentifier: "Edit", sender: editFruitsItem)
+    }
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let navigationController = segue.destination as? UINavigationController else { return }
+        guard let addItemViewController =
+                navigationController.topViewController as? AddItemViewController else { return }
+
+        switch segue.identifier ?? "" {
+        case "Edit":
+            guard let editFruitsItem = sender as? EditFruitsItem else { return }
+            addItemViewController.editFruitsItem = editFruitsItem
+            addItemViewController.mode = .edit
+        case "Add":
+            addItemViewController.mode = .add
+        default:
+            break
+        }
+    }
 }
 
 struct FruitsItem {
-    let name: String
+    var name: String
     var isChecked: Bool
+}
+
+struct EditFruitsItem {
+    var name: String
+    let index: Int
 }
