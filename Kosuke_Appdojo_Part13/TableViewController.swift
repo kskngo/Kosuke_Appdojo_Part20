@@ -34,6 +34,14 @@ class TableViewController: UITableViewController {
         tableView.reloadRows(at: [indexPath], with: .automatic)
     }
 
+    override func tableView(
+        _ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            fruitsItems.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+        }
+    }
+
     @IBAction private func exitCancel(segue: UIStoryboardSegue) {
     }
 
