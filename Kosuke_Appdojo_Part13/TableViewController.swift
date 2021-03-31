@@ -8,7 +8,7 @@
 import UIKit
 
 class TableViewController: UITableViewController {
-//    private var indexForEditing: Int?
+
     private var addItemMode: AddItemViewController.Mode?
 
     private enum Segue: String {
@@ -16,12 +16,14 @@ class TableViewController: UITableViewController {
         case edit = "Edit"
     }
 
-    private var fruitsItems = [
-        FruitsItem(name: "りんご", isChecked: false),
-        FruitsItem(name: "みかん", isChecked: true),
-        FruitsItem(name: "バナナ", isChecked: false),
-        FruitsItem(name: "パイナップル", isChecked: true)
-    ]
+    private var fruitsItems: [FruitsItem] = []
+
+    private static let fruitsItemsKey = "fruitsItemsKey"
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        loadFruitsItems()
+    }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         fruitsItems.count
@@ -38,6 +40,7 @@ class TableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         fruitsItems[indexPath.row].isChecked.toggle()
         tableView.reloadRows(at: [indexPath], with: .automatic)
+        saveFruitsItems()
     }
 
     override func tableView(
@@ -45,6 +48,7 @@ class TableViewController: UITableViewController {
         if editingStyle == .delete {
             fruitsItems.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .automatic)
+            saveFruitsItems()
         }
     }
 
@@ -58,9 +62,6 @@ class TableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
-//        indexForEditing = indexPath.rowx
-//        performSegue(withIdentifier: "Edit", sender: fruitsItems[indexPath.row])
-
         addItemMode = .edit(
             target: fruitsItems[indexPath.row],
             completion: { [weak self] fruitsItem in
@@ -69,6 +70,7 @@ class TableViewController: UITableViewController {
                 self?.fruitsItems[indexPath.row] = fruitsItem
                 self?.tableView.reloadRows(at: [indexPath], with: .automatic)
                 self?.addItemMode = nil
+                self?.saveFruitsItems()
             }
         )
         performSegue(withIdentifier: "Edit", sender: nil)
@@ -82,14 +84,13 @@ class TableViewController: UITableViewController {
                 self?.fruitsItems.append(fruitsItem)
                 self?.tableView.reloadData()
                 self?.addItemMode = nil
+                self?.saveFruitsItems()
         })
 
-        print(#function)
         performSegue(withIdentifier: "Add", sender: nil)
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        print(#function)
         guard let navigationController = segue.destination as? UINavigationController else { return }
         guard let addItemViewController =
                 navigationController.topViewController as? AddItemViewController else { return }
@@ -99,36 +100,21 @@ class TableViewController: UITableViewController {
         switch segue {
         case .edit, .add:
             addItemViewController.mode = addItemMode
-
-//        switch segue.identifier ?? "" {
-//        case "Edit":
-//            guard let editFruitsItem = sender as? FruitsItem else { return }
-//            guard let indexForEditing = indexForEditing else { return }
-//
-//            addItemViewController.mode = .edit(
-//                target: editFruitsItem,
-//                completion: { [weak self] fruitsItem in
-//                    guard let fruitsItem = fruitsItem else { return }
-//
-//                    self?.fruitsItems[indexForEditing] = fruitsItem
-//                    self?.tableView.reloadRows(at: [IndexPath(row: indexForEditing, section: 0)], with: .automatic)
-//                    self?.indexForEditing = nil
-//                }
-//            )
-//        case "Add":
-//            addItemViewController.mode = .add(completion: { [weak self] fruitsItem in
-//                guard let fruitsItem = fruitsItem else { return }
-//
-//                self?.fruitsItems.append(fruitsItem)
-//                self?.tableView.reloadData()
-//            })
-//        default:
-//            break
         }
+    }
+
+    private func saveFruitsItems() {
+        let saveData = fruitsItems.map { try? JSONEncoder().encode($0) }
+        UserDefaults.standard.set(saveData as [Any], forKey: Self.fruitsItemsKey)
+    }
+
+    private func loadFruitsItems() {
+        guard let items = UserDefaults.standard.array(forKey: Self.fruitsItemsKey) as? [Data] else { return }
+        fruitsItems = items.compactMap { try? JSONDecoder().decode(FruitsItem.self, from: $0) }
     }
 }
 
-struct FruitsItem {
+struct FruitsItem: Codable {
     var name: String
     var isChecked: Bool
 }
