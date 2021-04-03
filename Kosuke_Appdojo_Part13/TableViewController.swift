@@ -18,11 +18,14 @@ class TableViewController: UITableViewController {
 
     private var fruitsItems: [FruitsItem] = []
 
-    private static let fruitsItemsKey = "fruitsItemsKey"
+    private let repository = FruitsItemsRepository()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadFruitsItems()
+
+        if let fruitsItems = repository.load() {
+            self.fruitsItems = fruitsItems
+        }
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -40,7 +43,7 @@ class TableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         fruitsItems[indexPath.row].isChecked.toggle()
         tableView.reloadRows(at: [indexPath], with: .automatic)
-        saveFruitsItems()
+        repository.save(fruitsItems: fruitsItems)
     }
 
     override func tableView(
@@ -48,7 +51,7 @@ class TableViewController: UITableViewController {
         if editingStyle == .delete {
             fruitsItems.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .automatic)
-            saveFruitsItems()
+            repository.save(fruitsItems: fruitsItems)
         }
     }
 
@@ -65,12 +68,13 @@ class TableViewController: UITableViewController {
         addItemMode = .edit(
             target: fruitsItems[indexPath.row],
             completion: { [weak self] fruitsItem in
+                guard let strongSelf = self else { return }
                 guard let fruitsItem = fruitsItem else { return }
 
-                self?.fruitsItems[indexPath.row] = fruitsItem
-                self?.tableView.reloadRows(at: [indexPath], with: .automatic)
-                self?.addItemMode = nil
-                self?.saveFruitsItems()
+                strongSelf.fruitsItems[indexPath.row] = fruitsItem
+                strongSelf.tableView.reloadRows(at: [indexPath], with: .automatic)
+                strongSelf.addItemMode = nil
+                strongSelf.repository.save(fruitsItems: strongSelf.fruitsItems)
             }
         )
         performSegue(withIdentifier: "Edit", sender: nil)
@@ -79,12 +83,13 @@ class TableViewController: UITableViewController {
     @IBAction private func add(_ sender: Any) {
         addItemMode = .add(
             completion: { [weak self] fruitsItem in
+                guard let strongSelf = self else { return }
                 guard let fruitsItem = fruitsItem else { return }
 
-                self?.fruitsItems.append(fruitsItem)
-                self?.tableView.reloadData()
-                self?.addItemMode = nil
-                self?.saveFruitsItems()
+                strongSelf.fruitsItems.append(fruitsItem)
+                strongSelf.tableView.reloadData()
+                strongSelf.addItemMode = nil
+                strongSelf.repository.save(fruitsItems: strongSelf.fruitsItems)
         })
 
         performSegue(withIdentifier: "Add", sender: nil)
@@ -101,16 +106,6 @@ class TableViewController: UITableViewController {
         case .edit, .add:
             addItemViewController.mode = addItemMode
         }
-    }
-
-    private func saveFruitsItems() {
-        let saveData = fruitsItems.map { try? JSONEncoder().encode($0) }
-        UserDefaults.standard.set(saveData as [Any], forKey: Self.fruitsItemsKey)
-    }
-
-    private func loadFruitsItems() {
-        guard let items = UserDefaults.standard.array(forKey: Self.fruitsItemsKey) as? [Data] else { return }
-        fruitsItems = items.compactMap { try? JSONDecoder().decode(FruitsItem.self, from: $0) }
     }
 }
 
