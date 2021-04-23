@@ -8,7 +8,6 @@
 import UIKit
 
 class TableViewController: UITableViewController {
-
     private var addItemMode: AddItemViewController.Mode?
 
     private enum Segue: String {

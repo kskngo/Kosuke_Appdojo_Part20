@@ -10,20 +10,11 @@ import CoreData
 import UIKit
 
 struct FruitsItemsRepository {
+    private static let fruitsEntityName = "Fruits"
+    private static let nameKey = "name"
+    private static let isCheckedKey = "isChecked"
 
-    private static let fruitsItemsKey = "fruitsItemsKey"
     var container: NSPersistentContainer!
-
-//    @discardableResult
-//    func save2(fruitsItems: [FruitsItem]) -> Bool {
-//        do {
-//            let saveData = try JSONEncoder().encode(fruitsItems)
-//            UserDefaults.standard.set(saveData, forKey: Self.fruitsItemsKey)
-//            return true
-//        } catch {
-//            return false
-//        }
-//    }
 
     @discardableResult
     func save(fruitsItems: [FruitsItem]) -> Bool {
@@ -31,13 +22,14 @@ struct FruitsItemsRepository {
             return false
         }
         let managedContext = appDelegate.persistentContainer.viewContext
-        let entity = NSEntityDescription.entity(forEntityName: "Fruits", in: managedContext)!
+        let entity = NSEntityDescription.entity(forEntityName: Self.fruitsEntityName, in: managedContext)!
 
-        let fruits = NSManagedObject(entity: entity, insertInto: managedContext)
-        fruits.setValue(fruitsItems[0].name, forKey: "name")
-        fruits.setValue(fruitsItems[0].isChecked, forKey: "isChecked")
-
-        appDelegate.saveContext()
+        for fruitsItem in fruitsItems {
+            let fruits = NSManagedObject(entity: entity, insertInto: managedContext)
+            fruits.setValue(fruitsItem.name, forKey: Self.nameKey)
+            fruits.setValue(fruitsItem.isChecked, forKey: Self.isCheckedKey)
+            appDelegate.saveContext()
+        }
         return true
     }
 
@@ -47,7 +39,7 @@ struct FruitsItemsRepository {
         }
         let managedContext = appDelegate.persistentContainer.viewContext
 
-        let fetchRequest = NSFetchRequest<Fruits>(entityName: "Fruits")
+        let fetchRequest = NSFetchRequest<Fruits>(entityName: Self.fruitsEntityName)
 
         do {
             let results = try managedContext.fetch(fetchRequest)
@@ -63,15 +55,4 @@ struct FruitsItemsRepository {
             return nil
         }
     }
-
-//    func load2() -> [FruitsItem]? {
-//        do {
-//            guard let data = UserDefaults.standard.data(forKey: Self.fruitsItemsKey) else {
-//                return nil
-//            }
-//            return try JSONDecoder().decode([FruitsItem].self, from: data)
-//        } catch {
-//            return nil
-//        }
-//    }
 }
