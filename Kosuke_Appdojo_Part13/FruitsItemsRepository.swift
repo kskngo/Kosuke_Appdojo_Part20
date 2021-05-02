@@ -14,7 +14,7 @@ struct FruitsItemsRepository {
     private static let nameKey = "name"
     private static let isCheckedKey = "isChecked"
 
-    var container: NSPersistentContainer!
+//    var container: NSPersistentContainer!
 
     @discardableResult
     func save(fruitsItems: [FruitsItem]) -> Bool {
@@ -22,14 +22,33 @@ struct FruitsItemsRepository {
             return false
         }
         let managedContext = appDelegate.persistentContainer.viewContext
-        let entity = NSEntityDescription.entity(forEntityName: Self.fruitsEntityName, in: managedContext)!
+
+        guard let entity = NSEntityDescription.entity(forEntityName: Self.fruitsEntityName, in: managedContext) else {
+            return false
+        }
 
         for fruitsItem in fruitsItems {
             let fruits = NSManagedObject(entity: entity, insertInto: managedContext)
             fruits.setValue(fruitsItem.name, forKey: Self.nameKey)
             fruits.setValue(fruitsItem.isChecked, forKey: Self.isCheckedKey)
-            appDelegate.saveContext()
         }
+        appDelegate.saveContext()
+        return true
+    }
+
+    @discardableResult
+    func add(fruitsItem: FruitsItem) -> Bool {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            return false
+        }
+        let managedContext = appDelegate.persistentContainer.viewContext
+        let fruits = NSEntityDescription.insertNewObject(forEntityName: Self.fruitsEntityName, into: managedContext)
+
+//        let fruits = NSManagedObject(entity: entity, insertInto: managedContext)
+        fruits.setValue(fruitsItem.name, forKey: Self.nameKey)
+        fruits.setValue(fruitsItem.isChecked, forKey: Self.isCheckedKey)
+
+        appDelegate.saveContext()
         return true
     }
 
@@ -43,6 +62,7 @@ struct FruitsItemsRepository {
 
         do {
             let results = try managedContext.fetch(fetchRequest)
+            print(results.count)
             var fruitsItems = [FruitsItem]()
             for result in results {
                 if let name = result.name, let isChecked = result.isChecked as? Bool {
@@ -54,5 +74,9 @@ struct FruitsItemsRepository {
         } catch {
             return nil
         }
+    }
+
+    func update() -> Bool {
+        return true
     }
 }

@@ -50,7 +50,7 @@ class TableViewController: UITableViewController {
         if editingStyle == .delete {
             fruitsItems.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .automatic)
-            repository.save(fruitsItems: fruitsItems)
+//            repository.save(fruitsItems: fruitsItems)
         }
     }
 
@@ -73,7 +73,7 @@ class TableViewController: UITableViewController {
                 strongSelf.fruitsItems[indexPath.row] = fruitsItem
                 strongSelf.tableView.reloadRows(at: [indexPath], with: .automatic)
                 strongSelf.addItemMode = nil
-                strongSelf.repository.save(fruitsItems: strongSelf.fruitsItems)
+//                strongSelf.repository.save(fruitsItems: strongSelf.fruitsItems)
             }
         )
         performSegue(withIdentifier: "Edit", sender: nil)
@@ -88,7 +88,8 @@ class TableViewController: UITableViewController {
                 strongSelf.fruitsItems.append(fruitsItem)
                 strongSelf.tableView.reloadData()
                 strongSelf.addItemMode = nil
-                strongSelf.repository.save(fruitsItems: strongSelf.fruitsItems)
+                strongSelf.repository.add(fruitsItem: fruitsItem)
+                print(#function)
         })
 
         performSegue(withIdentifier: "Add", sender: nil)
