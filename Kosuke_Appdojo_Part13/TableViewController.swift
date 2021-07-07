@@ -50,7 +50,7 @@ class TableViewController: UITableViewController {
         if editingStyle == .delete {
             fruitsItems.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .automatic)
-//            repository.save(fruitsItems: fruitsItems)
+            repository.save(fruitsItems: fruitsItems)
         }
     }
 
